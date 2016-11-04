@@ -54,32 +54,46 @@ public class Game extends Canvas implements Runnable{
 
 	@Override
 	public void run() {
-		long lastTime = System.nanoTime();
 		double amountOfTicks = 60.0;
-		double ns = 1000000000 / amountOfTicks;
-		double delta = 0;
+		double nsPerTick = 1000000000.0 / amountOfTicks;
+		double unprocessed = 0;
+		long lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
-		int frames = 0;
+		int fps = 0;
+		int tps = 0;
+		boolean canRender = false;
 		while(_running){
 			long now = System.nanoTime();
-			delta += (now - lastTime) / ns;
+			unprocessed += (now - lastTime) / nsPerTick;
 			lastTime = now;
-			while(delta >= 1){
+			if(unprocessed >= 1){
 				tick();
-				delta-=1;
-			}
-			if(_running){
-				render();
-			}
-			frames++;
+				unprocessed-=1;
+				tps++;
+				canRender = true;
+			}else canRender = false;
 
-			if(System.currentTimeMillis() - timer > 1000){
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			if(canRender){
+				render();
+				fps++;
+			}
+
+			if(System.currentTimeMillis() - 1000 > timer){
 				timer += 1000;
-				_frame.setTitle("Game fps: "+frames);
-				frames = 0;
+				_frame.setTitle("FPS: "+fps+" TPS:"+tps);
+				fps = 0;
+				tps = 0;
 			} 
 		}
-		stop();
+		
+		System.exit(0);
 	}
 
 	private void tick(){
@@ -90,7 +104,7 @@ public class Game extends Canvas implements Runnable{
 				numOfEnemies++;
 			}
 		}
-		if(numOfEnemies<1){
+		if(numOfEnemies<100){
 			Random r = new Random();
 			BasicEnemy enemy = new BasicEnemy((int)(r.nextDouble()*WIDTH),0);//(r.nextInt(WIDTH/3),r.nextInt(HEIGHT/3));
 			enemy.setVel(r.nextDouble()*4-2,r.nextDouble()*4-2);

@@ -1,6 +1,8 @@
 package game;
 import java.awt.Canvas;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
@@ -21,6 +23,12 @@ public class Window extends Canvas{
 		_frame.setMinimumSize(new Dimension(width,height));
 		
 		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		_frame.addWindowListener(new WindowAdapter(){
+			@Override
+			public void windowClosing(WindowEvent e){
+				//game.stop();
+			}
+		});
 		_frame.setResizable(false);
 		_frame.setLocationRelativeTo(null);
 		//_frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
