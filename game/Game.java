@@ -38,7 +38,7 @@ public class Game extends Canvas implements Runnable{
 	}
 
 	public synchronized void start(){
-		_thread = new Thread(this);
+		_thread = new Thread(this, "Game");
 		_thread.start();
 		_running = true;
 	}
@@ -76,7 +76,6 @@ public class Game extends Canvas implements Runnable{
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
