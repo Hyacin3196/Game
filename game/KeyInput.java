@@ -10,8 +10,8 @@ import java.awt.event.KeyListener;
  */
 public class KeyInput implements KeyListener {
 
-	private static final boolean[]	keys			= new boolean[256];
-	private static final boolean[]	previousKeys	= new boolean[256];
+	private static boolean[]	keys			= new boolean[256];
+	private static boolean[]	previousKeys	= new boolean[256];
 
 	public void keyPressed(KeyEvent e) {
 		keys[e.getKeyCode()] = true;
@@ -19,6 +19,13 @@ public class KeyInput implements KeyListener {
 
 	public void keyReleased(KeyEvent e) {
 		keys[e.getKeyCode()] = false;
+	}
+
+	/**
+	 * to be called after the tick method in Game class
+	 */
+	public void update() {
+		previousKeys = keys;
 	}
 
 	public boolean isDown(int keyCode) {

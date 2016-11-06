@@ -1,5 +1,6 @@
 package game.rendering;
 
+import java.awt.Graphics;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +21,19 @@ public class Texture {
 			_manager.addReference();
 		}
 		try {
-			_manager = new TextureManager(ImageIO.read(getClass().getResource("/homing_missile.png")));
+			_manager = new TextureManager(
+					ImageIO.read(getClass().getResource("./resources/textures/" + fileName + ".png")));
 			texMap.put(fileName, _manager);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	public void render(Graphics g, double x, double y, double width, double height) {
+		g.drawImage(_manager.getImage(), (int) x, (int) y, (int) width, (int) height, null);
+	}
+
+	public void render(Graphics g, double x, double y) {
+		g.drawImage(_manager.getImage(), (int) x, (int) y, null);
 	}
 }
