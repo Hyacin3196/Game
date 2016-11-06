@@ -1,14 +1,12 @@
 package game;
+
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
 
-import javax.swing.SwingWorker;
-
-public class Game extends Canvas implements Runnable{
-
+public class Game extends Canvas implements Runnable {
 
 	/**
 	 * 
@@ -21,33 +19,34 @@ public class Game extends Canvas implements Runnable{
 
 	public final static int HEIGHT = WIDTH / 12 * 9;
 
-	private Thread _thread;
-	private boolean _running = false;
-	ImageLibrary imageLibrary = new ImageLibrary();
+	private Thread	_thread;
+	private boolean	_running		= false;
+	ImageLibrary	imageLibrary	= new ImageLibrary();
 
 	private Handler _handler;
 
-	public Game(){
-		_frame = new Window(WIDTH+6,HEIGHT+29,"Game",this);
+	private KeyInput _keyInput = new KeyInput();
 
+	public Game() {
+		_frame = new Window(WIDTH + 6, HEIGHT + 29, "Game", this);
 
 		_handler = new Handler();
-		this.addKeyListener(new KeyInput(_handler));
+		this.addKeyListener(_keyInput);
 		Random r = new Random();
 
 	}
 
-	public synchronized void start(){
+	public synchronized void start() {
 		_thread = new Thread(this, "Game");
 		_thread.start();
 		_running = true;
 	}
 
-	public synchronized void stop(){
-		try{
+	public synchronized void stop() {
+		try {
 			_thread.join();
 			_running = false;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -62,16 +61,17 @@ public class Game extends Canvas implements Runnable{
 		int fps = 0;
 		int tps = 0;
 		boolean canRender = false;
-		while(_running){
+		while (_running) {
 			long now = System.nanoTime();
 			unprocessed += (now - lastTime) / nsPerTick;
 			lastTime = now;
-			if(unprocessed >= 1){
+			if (unprocessed >= 1) {
 				tick();
-				unprocessed-=1;
+				unprocessed -= 1;
 				tps++;
 				canRender = true;
-			}else canRender = false;
+			} else
+				canRender = false;
 
 			try {
 				Thread.sleep(1);
@@ -79,41 +79,41 @@ public class Game extends Canvas implements Runnable{
 				e.printStackTrace();
 			}
 
-			if(canRender){
+			if (canRender) {
 				render();
 				fps++;
 			}
 
-			if(System.currentTimeMillis() - 1000 > timer){
+			if (System.currentTimeMillis() - 1000 > timer) {
 				timer += 1000;
-				_frame.setTitle("FPS: "+fps+" TPS:"+tps);
+				_frame.setTitle("FPS: " + fps + " TPS:" + tps);
 				fps = 0;
 				tps = 0;
-			} 
+			}
 		}
-		
+
 		System.exit(0);
 	}
 
-	private void tick(){
+	private void tick() {
 		_handler.tick();
-		int numOfEnemies=0;
-		for(int i=0; i<_handler.size();i++){
-			if(_handler.get(i).id==ID.BasicEnemy){
+		int numOfEnemies = 0;
+		for (int i = 0; i < _handler.size(); i++) {
+			if (_handler.get(i).id == ID.BasicEnemy) {
 				numOfEnemies++;
 			}
 		}
-		if(numOfEnemies<100){
+		if (numOfEnemies < 100) {
 			Random r = new Random();
-			BasicEnemy enemy = new BasicEnemy((int)(r.nextDouble()*WIDTH),0);//(r.nextInt(WIDTH/3),r.nextInt(HEIGHT/3));
-			enemy.setVel(r.nextDouble()*4-2,r.nextDouble()*4-2);
+			BasicEnemy enemy = new BasicEnemy((int) (r.nextDouble() * WIDTH), 0);// (r.nextInt(WIDTH/3),r.nextInt(HEIGHT/3));
+			enemy.setVel(r.nextDouble() * 4 - 2, r.nextDouble() * 4 - 2);
 			_handler.add(enemy);
 		}
 	}
 
-	private void render(){
+	private void render() {
 		BufferStrategy bs = this.getBufferStrategy();
-		if(bs == null){
+		if (bs == null) {
 			this.createBufferStrategy(3);
 			return;
 		}
@@ -121,7 +121,7 @@ public class Game extends Canvas implements Runnable{
 		Graphics g = bs.getDrawGraphics();
 
 		g.setColor(Color.black);
-		g.fillRect(0,0,WIDTH,HEIGHT);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
 
 		_handler.render(g);
 
@@ -129,7 +129,7 @@ public class Game extends Canvas implements Runnable{
 		bs.show();
 	}
 
-	public static void main(String args[]){
+	public static void main(String args[]) {
 		new Game();
 	}
 }
