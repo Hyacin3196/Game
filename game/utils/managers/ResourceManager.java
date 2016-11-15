@@ -1,5 +1,10 @@
 package game.utils.managers;
 
+/**
+ * 
+ * @author DarkIris3196
+ *
+ */
 public abstract class ResourceManager {
 
 	protected int _count = 1;

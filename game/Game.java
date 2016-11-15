@@ -67,6 +67,7 @@ public class Game extends Canvas implements Runnable {
 			lastTime = now;
 			if (unprocessed >= 1) {
 				tick();
+				_keyInput.update();
 				unprocessed -= 1;
 				tps++;
 				canRender = true;
