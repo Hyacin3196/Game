@@ -32,12 +32,10 @@ public class Game extends Canvas implements Runnable {
 
 	private Handler _handler;
 
-	private int numOfThreads = 8;
-
 	public Game() {
 		_frame = new Window(WIDTH + 6, HEIGHT + 29, "Game", this);
 
-		_handler = new Handler(numOfThreads);
+		_handler = new Handler();
 		KeyInput keyList = new KeyInput();
 		this.addKeyListener(keyList);
 		Random r = new Random();
@@ -45,7 +43,7 @@ public class Game extends Canvas implements Runnable {
 		// _handler.add(new
 		// Player(r.nextInt(WIDTH),r.nextInt(HEIGHT),ID.Player2));
 
-		_handler.add(player = new Player(WIDTH / 2, HEIGHT / 2, keyList));
+		_handler.add(player = new Player(WIDTH / 2, (HEIGHT / 2) + 250, keyList));
 
 	}
 
@@ -104,7 +102,10 @@ public class Game extends Canvas implements Runnable {
 		}
 		if (numOfEnemies < 600) {
 			Random r = new Random();
-			BasicEnemy enemy = new BasicEnemy((int) (r.nextDouble() * WIDTH), 0);// (r.nextInt(WIDTH/3),r.nextInt(HEIGHT/3));
+
+			// BasicEnemy enemy = new BasicEnemy((int) (r.nextDouble() * WIDTH),
+			// 0);// (r.nextInt(WIDTH/3),r.nextInt(HEIGHT/3));
+			BasicEnemy enemy = new BasicEnemy(WIDTH / 2, HEIGHT / 2);
 			enemy.setVel(r.nextDouble() * 6 - 3, r.nextDouble() * 6 - 3);
 			_handler.add(enemy);
 		}

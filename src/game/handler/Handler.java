@@ -13,10 +13,8 @@ import game.entities.objects.GameObject;
 public class Handler {
 	private List<GameObject>	objects	= Collections.synchronizedList(new LinkedList<GameObject>());
 	private List<Thread>		threads	= new ArrayList<Thread>();
-	int							numOfThreads;
 
-	public Handler(int numOfThreads) {
-		this.numOfThreads = numOfThreads;
+	public Handler() {
 	}
 
 	public void tick() {
@@ -26,7 +24,7 @@ public class Handler {
 	}
 
 	public void render(Graphics g) {
-		for (int i = 0; i < objects.size(); i++) {
+		for (int i = objects.size() - 1; i >= 0; i--) {
 			// if(object.get(i)!=null)
 			objects.get(i).render(g);
 		}
