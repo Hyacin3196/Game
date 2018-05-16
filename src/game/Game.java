@@ -6,6 +6,12 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
 
+import game.entities.ID;
+import game.entities.objects.BasicEnemy;
+import game.entities.objects.Player;
+import game.handler.Handler;
+import game.input.KeyInput;
+
 public class Game extends Canvas implements Runnable {
 
 	/**
@@ -15,34 +21,39 @@ public class Game extends Canvas implements Runnable {
 
 	Window _frame;
 
-	public final static int WIDTH = 480;
+	public final static int WIDTH = 720;
 
 	public final static int HEIGHT = WIDTH / 12 * 9;
 
-	private Thread	_thread;
-	private boolean	_running		= false;
-	ImageLibrary	imageLibrary	= new ImageLibrary();
+	private Thread			_thread;
+	private boolean			_running		= false;
+	ImageLibrary			imageLibrary	= new ImageLibrary();
+	public static Player	player;
 
 	private Handler _handler;
-
-	private KeyInput _keyInput = new KeyInput();
 
 	public Game() {
 		_frame = new Window(WIDTH + 6, HEIGHT + 29, "Game", this);
 
 		_handler = new Handler();
-		this.addKeyListener(_keyInput);
+		KeyInput keyList = new KeyInput();
+		this.addKeyListener(keyList);
 		Random r = new Random();
+
+		// _handler.add(new
+		// Player(r.nextInt(WIDTH),r.nextInt(HEIGHT),ID.Player2));
+
+		_handler.add(player = new Player(WIDTH / 2, HEIGHT / 2, keyList));
 
 	}
 
-	public synchronized void start() {
-		_thread = new Thread(this, "Game");
+	public void start() {
+		_thread = new Thread(this);
 		_thread.start();
 		_running = true;
 	}
 
-	public synchronized void stop() {
+	public void stop() {
 		try {
 			_thread.join();
 			_running = false;
@@ -53,61 +64,46 @@ public class Game extends Canvas implements Runnable {
 
 	@Override
 	public void run() {
-		double amountOfTicks = 60.0;
-		double nsPerTick = 1000000000.0 / amountOfTicks;
-		double unprocessed = 0;
 		long lastTime = System.nanoTime();
+		double amountOfTicks = 60.0;
+		double ns = 1000000000 / amountOfTicks;
+		double delta = 0;
 		long timer = System.currentTimeMillis();
-		int fps = 0;
-		int tps = 0;
-		boolean canRender = false;
+		int frames = 0;
 		while (_running) {
 			long now = System.nanoTime();
-			unprocessed += (now - lastTime) / nsPerTick;
+			delta += (now - lastTime) / ns;
 			lastTime = now;
-			if (unprocessed >= 1) {
+			while (delta >= 1) {
 				tick();
-				_keyInput.update();
-				unprocessed -= 1;
-				tps++;
-				canRender = true;
-			} else
-				canRender = false;
-
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				delta -= 1;
 			}
-
-			if (canRender) {
+			if (_running) {
 				render();
-				fps++;
 			}
+			frames++;
 
-			if (System.currentTimeMillis() - 1000 > timer) {
+			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				_frame.setTitle("FPS: " + fps + " TPS:" + tps);
-				fps = 0;
-				tps = 0;
+				_frame.setTitle("Game fps: " + frames);
+				frames = 0;
 			}
 		}
-
-		System.exit(0);
+		stop();
 	}
 
 	private void tick() {
 		_handler.tick();
 		int numOfEnemies = 0;
 		for (int i = 0; i < _handler.size(); i++) {
-			if (_handler.get(i).id == ID.BasicEnemy) {
+			if (_handler.get(i).confirmID(ID.BasicEnemy)) {
 				numOfEnemies++;
 			}
 		}
-		if (numOfEnemies < 100) {
+		if (numOfEnemies < 150) {
 			Random r = new Random();
 			BasicEnemy enemy = new BasicEnemy((int) (r.nextDouble() * WIDTH), 0);// (r.nextInt(WIDTH/3),r.nextInt(HEIGHT/3));
-			enemy.setVel(r.nextDouble() * 4 - 2, r.nextDouble() * 4 - 2);
+			enemy.setVel(r.nextDouble() * 6 - 3, r.nextDouble() * 6 - 3);
 			_handler.add(enemy);
 		}
 	}
@@ -115,7 +111,7 @@ public class Game extends Canvas implements Runnable {
 	private void render() {
 		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null) {
-			this.createBufferStrategy(3);
+			this.createBufferStrategy(2);
 			return;
 		}
 
