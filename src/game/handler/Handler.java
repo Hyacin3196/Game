@@ -11,76 +11,98 @@ import javax.swing.SwingWorker;
 import game.entities.objects.GameObject;
 
 public class Handler {
-	private List<GameObject>	object			= Collections.synchronizedList(new LinkedList<GameObject>());
-	private List<Thread>		objTickThreads	= new ArrayList<Thread>();
-	int							it				= 0;
+	private List<GameObject>	objects	= Collections.synchronizedList(new LinkedList<GameObject>());
+	private List<Thread>		threads	= new ArrayList<Thread>();
+	int							numOfThreads;
+
+	public Handler(int numOfThreads) {
+		this.numOfThreads = numOfThreads;
+	}
 
 	public void tick() {
-		System.out.println(it++);
-		System.out.println("objsize - " + object.size());
-		System.out.println("thsize - " + objTickThreads.size());
-		objTickThreads = new ArrayList<Thread>();
-		for (int i = 0; i < object.size(); i++) {
-			// if(object.get(i)!=null)
-			// object.get(i).run();
-
-			Thread th = new Thread(object.get(i));
-			// th.start();
-			object.get(i).run();
-			objTickThreads.add(th);
+		for (int i = 0; i < objects.size(); i++) {
+			objects.get(i).run();
 		}
+	}
 
-		for (int i = 0; i < objTickThreads.size(); i++) {
+	public void render(Graphics g) {
+		for (int i = 0; i < objects.size(); i++) {
+			// if(object.get(i)!=null)
+			objects.get(i).render(g);
+		}
+		/*List<List<GameObject>> listolist = Collections.synchronizedList(new LinkedList<List<GameObject>>());
+		threads = new ArrayList<Thread>();
+		
+		int itemsPerList = objects.size() / numOfThreads;
+		for (int i = 0; i < numOfThreads - 1; i++) {
+			int start = i * itemsPerList;
+			listolist.add(objects.subList(start, start + itemsPerList));
+		}
+		{
+			int start = (numOfThreads - 1) * itemsPerList;
+			listolist.add(objects.subList(start, objects.size()));
+		}
+		
+		for (int i = 0; i < objects.size(); i++) {
+		}
+		
+		for (int i = 0; i < listolist.size(); i++) {
+			List<GameObject> ObjList = listolist.get(i);
+			Thread th = new Thread(new GameObjRunner(ObjList) {
+				@Override
+				public void run() {
+					for (GameObject obj : ObjList) {
+						obj.render(g);
+					}
+				}
+			});
+			th.start();
+			threads.add(th);
+		}
+		
+		for (int i = 0; i < threads.size(); i++) {
 			try {
-				objTickThreads.get(i).join();
-
+				threads.get(i).join();
+		
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-		objTickThreads.clear();
-	}
-
-	public void render(Graphics g) {
-		for (int i = 0; i < object.size(); i++) {
-			// if(object.get(i)!=null)
-			object.get(i).render(g);
-		}
+		}*/
 	}
 
 	public void add(GameObject obj) {
 		obj.setHandler(this);
-		this.object.add(obj);
+		this.objects.add(obj);
 		obj.isPresent = true;
 	}
 
 	public void add(int i, GameObject obj) {
 		obj.setHandler(this);
-		this.object.add(i, obj);
+		this.objects.add(i, obj);
 	}
 
 	public void remove(GameObject obj) {
 		obj.isPresent = false;
-		this.object.remove(obj);
+		this.objects.remove(obj);
 	}
 
 	public void toFront(GameObject obj) {
-		object.remove(obj);
-		object.add(obj);
+		objects.remove(obj);
+		objects.add(obj);
 	}
 
 	public void toBack(GameObject obj) {
-		object.remove(obj);
-		object.add(0, obj);
+		objects.remove(obj);
+		objects.add(0, obj);
 	}
 
 	public int size() {
-		return object.size();
+		return objects.size();
 	}
 
 	public GameObject get(int index) {
-		return object.get(index);
+		return objects.get(index);
 	}
 
 }
