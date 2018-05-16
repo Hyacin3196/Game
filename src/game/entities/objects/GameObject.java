@@ -12,7 +12,7 @@ import javax.swing.SwingWorker;
 import game.entities.ID;
 import game.handler.Handler;
 
-public abstract class GameObject extends Thread {
+public abstract class GameObject implements Runnable {
 
 	public double	x				= -100, y = -100;
 	public double	width, height;
@@ -43,6 +43,7 @@ public abstract class GameObject extends Thread {
 	double speed;
 
 	public GameObject(int x, int y, ID id) {
+		super();
 		this.x = x;
 		this.y = y;
 		this.id = id;
@@ -57,7 +58,7 @@ public abstract class GameObject extends Thread {
 		}
 	}
 
-	public abstract void tick();
+	public abstract void run();
 
 	public abstract void render(Graphics g);
 

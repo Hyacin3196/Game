@@ -25,7 +25,7 @@ public class Bullet extends GameObject {
 	}
 
 	@Override
-	public void tick() {
+	public void run() {
 
 		if (y < border || y > Game.HEIGHT) {
 			_handler.remove(this);

@@ -40,8 +40,7 @@ public class HomingMissile extends GameObject {
 		_damage = 1000;
 	}
 
-	@Override
-	public void tick() {
+	public void run() {
 		if (lifeSpan < 0) {
 			_handler.remove(this);
 			_origin.missileList.remove(this);

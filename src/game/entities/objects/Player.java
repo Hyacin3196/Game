@@ -48,11 +48,6 @@ public class Player extends GameObject {
 	}
 
 	@Override
-	public void tick() {
-		this.start();
-	}
-
-	@Override
 	public void run() {
 		if (isDown(KeyEvent.VK_SHIFT)) {
 			speed = 2.5;
@@ -201,4 +196,5 @@ public class Player extends GameObject {
 	private boolean isDown(int code) {
 		return keyList.isDown(code);
 	}
+
 }

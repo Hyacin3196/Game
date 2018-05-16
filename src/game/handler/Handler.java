@@ -1,6 +1,7 @@
 package game.handler;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,13 +11,35 @@ import javax.swing.SwingWorker;
 import game.entities.objects.GameObject;
 
 public class Handler {
-	private List<GameObject> object = Collections.synchronizedList(new LinkedList<GameObject>());
+	private List<GameObject>	object			= Collections.synchronizedList(new LinkedList<GameObject>());
+	private List<Thread>		objTickThreads	= new ArrayList<Thread>();
+	int							it				= 0;
 
 	public void tick() {
+		System.out.println(it++);
+		System.out.println("objsize - " + object.size());
+		System.out.println("thsize - " + objTickThreads.size());
+		objTickThreads = new ArrayList<Thread>();
 		for (int i = 0; i < object.size(); i++) {
 			// if(object.get(i)!=null)
-			object.get(i).tick();
+			// object.get(i).run();
+
+			Thread th = new Thread(object.get(i));
+			// th.start();
+			object.get(i).run();
+			objTickThreads.add(th);
 		}
+
+		for (int i = 0; i < objTickThreads.size(); i++) {
+			try {
+				objTickThreads.get(i).join();
+
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		objTickThreads.clear();
 	}
 
 	public void render(Graphics g) {

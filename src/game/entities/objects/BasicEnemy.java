@@ -21,7 +21,7 @@ public class BasicEnemy extends GameObject {
 	}
 
 	@Override
-	public void tick() {
+	public void run() {
 		if (_hp == 0) {
 			_handler.remove(this);
 			Game.player.enemiesKilled++;
