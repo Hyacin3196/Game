@@ -22,6 +22,8 @@ public class HomingMissile extends GameObject {
 	private double		_turnVelDeg	= 6;
 	private int			lifeSpan	= 4500;
 
+	public int _damage;
+
 	public HomingMissile(int x, int y, double bulletSize) {
 		super(x, y, ID.HomingMissile);
 		width = bulletSize;
@@ -62,11 +64,12 @@ public class HomingMissile extends GameObject {
 				}
 			}
 		}
-		if (_target == null || !_target.isPresent)
+		// if (_target == null || !_target.isPresent)
+		if (_target == null)
 			_handler.remove(this);
 		// }
 
-		if (_target != null && _target.isPresent) {
+		if (_target != null) {
 			double angle2follow = Math
 					.toDegrees(Math.atan2(-this.centerY + _target.centerY, _target.centerX - this.centerX));
 			double angleDeg = Math.toDegrees(_angle);
@@ -85,7 +88,7 @@ public class HomingMissile extends GameObject {
 		}
 		velY = speed * Math.sin(_angle);
 		velX = speed * Math.cos(_angle);
-		if (_target != null && _target.isPresent && Math.abs(this.centerX - _target.centerX) < _target.width
+		if (_target != null && Math.abs(this.centerX - _target.centerX) < _target.width
 				&& Math.abs(this.centerY - _target.centerY) < _target.height) {
 			_target.reduceHealth(_damage);
 			_handler.remove(this);

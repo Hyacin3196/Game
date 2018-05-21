@@ -22,23 +22,13 @@ public abstract class GameObject implements Runnable {
 	public double	accX			= 0, accY = 0;
 	public double	r				= 0;					// angle
 	public double	velR			= 0;					// angular
-															// velocity
-	public double	accR			= 0;					// angular
+															// angular
 															// acceleration
 	public Handler	_handler;
 	public double	_hp;
-	public double	_maxHp;
-	public int		_damage;
 	public int		invincibility	= 0;
-
-	public boolean	up				= false;
-	public boolean	down			= false;
-	public boolean	left			= false;
-	public boolean	right			= false;
-	public boolean	slow			= false;
-	public boolean	playerShooting	= false;
 	public boolean	isPresent		= false;
-	public boolean	destroyed		= false;
+	// public boolean destroyed = false;
 
 	double speed;
 

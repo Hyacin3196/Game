@@ -10,6 +10,8 @@ public class Bullet extends GameObject {
 
 	private int border = 0;
 
+	public int _damage;
+
 	public Bullet(int x, int y, ID id, double bulletSize) {
 		super(x, y, id);
 		if (id == ID.PlayerBullet) {

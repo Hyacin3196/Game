@@ -8,6 +8,7 @@ import game.ImageLibrary;
 import game.entities.ID;
 
 public class BasicEnemy extends GameObject {
+	public int _maxHp;
 
 	public BasicEnemy(int x, int y) {
 		super(x, y, ID.BasicEnemy);

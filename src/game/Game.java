@@ -85,7 +85,13 @@ public class Game extends Canvas implements Runnable {
 
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				_frame.setTitle("Game fps: " + frames);
+				int numOfEnemies = 0;
+				for (int i = 0; i < _handler.size(); i++) {
+					if (_handler.get(i).confirmID(ID.BasicEnemy)) {
+						numOfEnemies++;
+					}
+				}
+				_frame.setTitle("Game fps: " + frames + " numOfEnemies: " + numOfEnemies);
 				frames = 0;
 			}
 		}
@@ -100,7 +106,7 @@ public class Game extends Canvas implements Runnable {
 				numOfEnemies++;
 			}
 		}
-		if (numOfEnemies < 600) {
+		if (numOfEnemies < 60) {
 			Random r = new Random();
 
 			// BasicEnemy enemy = new BasicEnemy((int) (r.nextDouble() * WIDTH),

@@ -11,7 +11,7 @@ import javax.swing.SwingWorker;
 import game.entities.objects.GameObject;
 
 public class Handler {
-	private List<GameObject>	objects	= Collections.synchronizedList(new LinkedList<GameObject>());
+	private List<GameObject>	objects	= Collections.synchronizedList(new ArrayList<GameObject>());
 	private List<Thread>		threads	= new ArrayList<Thread>();
 
 	public Handler() {
@@ -72,17 +72,18 @@ public class Handler {
 	public void add(GameObject obj) {
 		obj.setHandler(this);
 		this.objects.add(obj);
-		obj.isPresent = true;
+		// obj.isPresent = true;
 	}
 
 	public void add(int i, GameObject obj) {
-		obj.setHandler(this);
+		// obj.setHandler(this);
 		this.objects.add(i, obj);
 	}
 
 	public void remove(GameObject obj) {
-		obj.isPresent = false;
+		// obj.isPresent = false;
 		this.objects.remove(obj);
+		obj = null;
 	}
 
 	public void toFront(GameObject obj) {
